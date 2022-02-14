@@ -1,3 +1,25 @@
+const rockButton = document.querySelector(".rockButton");
+const paperButton = document.querySelector(".paperButton");
+const scissorsButton = document.querySelector(".scissorsButton");
+const resultsDiv = document.querySelector(".result");
+const computerScoreDiv = document.querySelector(".computerScore>.score");
+const playerScoreDiv = document.querySelector(".playerScore>.score");
+const drawScoreDiv = document.querySelector(".drawScore>.score");
+rockButton.addEventListener('click', () => game('rock'));
+paperButton.addEventListener('click', () => game('paper'));
+scissorsButton.addEventListener('click', () => game('scissors'));
+
+let computerScore = 0;
+let playerScore = 0;
+let drawScore = 0;
+updateDisplay();
+
+function updateDisplay() {
+    computerScoreDiv.textContent = computerScore;
+    playerScoreDiv.textContent = playerScore;
+    drawScoreDiv.textContent = drawScore;
+}
+
 let playChoices = new Map ([
     ['rock', ['scissors', 'Rock crushes scissors.']],
     ['paper', ['rock', 'Paper covers rock.']],
@@ -24,29 +46,16 @@ function playRound(computerSelection, playerSelection) {
     }
 }
 
-function game() {
-    let playerScore = 0;
-    let computerScore = 0;
-    let draws = 0;
-    for (let i = 0; i < 5; i++) {
-        let computerChoice = computerPlay();
-        let playerChoice = "";
-        let isError;
-        do {
-            let playerChoice = prompt(`Round ${i+1}. Rock, paper, or scissors (or quit)?`);
-            let { result, message } = playRound(computerChoice, playerChoice);
-            console.log(message);
-            if (result == 'computer') {
-                computerScore++;
-            } else if (result == 'player') {
-                playerScore++;
-            } else if (result == 'draw') {
-                draws++;
-            }
-            isError = (result == 'error');
-        } while (playerChoice.toLowerCase() != 'quit' && isError);
+function game(playerSelection) {
+    let {result, message} = playRound(computerPlay(),playerSelection);
+    resultsDiv.textContent = message;
+    if (result == 'computer') {
+        computerScore++;
+    } else if (result == 'player') {
+        playerScore++;
+    } else if (result == 'draw') {
+        drawScore++;
     }
-    console.log(`Total computer wins: ${computerScore}`);
-    console.log(`Total player wins: ${playerScore}`);
-    console.log(`Total draws: ${draws}`);
+    updateDisplay();
 }
+
